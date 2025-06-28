@@ -2,16 +2,23 @@
 
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { useRef, useEffect } from "react"
-import { fetchRoutes } from "@/lib/fetchRoutes"
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css"
+import { useRef, useEffect, useState } from "react"
+import NavigationSteps from "./ui/navigation-steps"
+import RouteWrapper from "./ui/routeWrapper"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
+
+type Step = {
+  distance: number
+  maneuver: { instruction: string }
+}
 
 export default function MapView() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
+  const [steps, setSteps] = useState<Step[]>([])
 
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return
@@ -19,7 +26,7 @@ export default function MapView() {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v12",
-      center: [-0.1276, 51.5072], // London
+      center: [-0.1276, 51.5072],
       zoom: 13,
     })
 
@@ -27,18 +34,13 @@ export default function MapView() {
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right")
 
-    // map.on("load", () => {
-    //   fetchRoutes(map, "-0.142,51.541", "-0.093,51.505")
-    // })
-
-    //mapbox built in ui for directions
     const directions = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       unit: "metric",
       profile: "mapbox/walking",
-      alternatives: true,
+      alternatives: false,
       controls: {
-        instructions: true,
+        instructions: false,
         profileSwitcher: false,
       },
     })
@@ -47,7 +49,8 @@ export default function MapView() {
 
     directions.on("route", (e: any) => {
       const firstRoute = e.route[0]
-      console.log("Selected route:", firstRoute)
+      const legSteps = firstRoute.legs?.[0]?.steps ?? []
+      setSteps(legSteps)
     })
 
     return () => {
@@ -56,5 +59,15 @@ export default function MapView() {
     }
   }, [])
 
-  return <div ref={mapContainer} className="h-screen w-full" />
+  return (
+    <div className="flex h-screen w-full">
+      {/* Sidebar */}
+      <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
+        <RouteWrapper steps={steps} />
+      </div>
+
+      {/* Map */}
+      <div ref={mapContainer} className="w-[70%] h-full" />
+    </div>
+  )
 }

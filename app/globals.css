@@ -32,6 +32,11 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 .mapboxgl-ctrl input {
   background-color: #1f2937 !important;
   color: #f9fafb !important;
