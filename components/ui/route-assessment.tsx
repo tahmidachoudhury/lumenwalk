@@ -1,44 +1,54 @@
-import { Brain, Clock, CheckCircle } from "lucide-react"
-
-interface Step {
-  maneuver: {
-    instruction: string
-  }
-  distance: number
-}
+import { Brain, Clock, CheckCircle, LoaderCircle } from "lucide-react"
 
 interface Props {
   steps: Step[]
+  assessment: Assessment
   isLoading?: boolean
 }
 
-// Mock AI assessment - replace with actual OpenAI API call
-function generateRouteAssessment(steps: Step[]) {
-  const totalDistance = steps.reduce((sum, step) => sum + step.distance, 0)
-  const totalTurns = steps.filter((step) =>
-    step.maneuver.instruction.toLowerCase().includes("turn")
-  ).length
-
-  return {
-    summary:
-      "This route appears to be well-optimized for pedestrian navigation with clear waypoints.",
-    insights: [
-      `Total distance: ${
-        totalDistance >= 1000
-          ? `${(totalDistance / 1000).toFixed(1)}km`
-          : `${totalDistance}m`
-      }`,
-      `${totalTurns} turns required - moderate complexity`,
-      "Route uses established walkways and streets",
-      "Good visibility at most intersections",
-    ],
-    difficulty: "Easy",
-    estimatedTime: `${Math.ceil(totalDistance / 80)} minutes`, // ~80m per minute walking
-  }
+type Step = {
+  distance: number
+  maneuver: { instruction: string }
 }
 
-export default function RouteAssessment({ steps, isLoading = false }: Props) {
-  if (steps.length === 0) {
+interface Assessment {
+  summary: string
+  insights: string[]
+  safety: string
+  estimatedTime: string
+}
+
+// Mock AI assessment - replace with actual OpenAI API call
+// function generateRouteAssessment(steps: Step[]) {
+//   const totalDistance = steps.reduce((sum, step) => sum + step.distance, 0)
+//   const totalTurns = steps.filter((step) =>
+//     step.maneuver.instruction.toLowerCase().includes("turn")
+//   ).length
+
+//   return {
+//     summary:
+//       "This route appears to be well-optimized for pedestrian navigation with clear waypoints.",
+//     insights: [
+//       `Total distance: ${
+//         totalDistance >= 1000
+//           ? `${(totalDistance / 1000).toFixed(1)}km`
+//           : `${totalDistance}m`
+//       }`,
+//       `${totalTurns} turns required - moderate complexity`,
+//       "Route uses established walkways and streets",
+//       "Good visibility at most intersections",
+//     ],
+//     difficulty: "Easy",
+//     estimatedTime: `${Math.ceil(totalDistance / 80)} minutes`, // ~80m per minute walking
+//   }
+// }
+
+export default function RouteAssessment({
+  steps,
+  assessment,
+  isLoading = false,
+}: Props) {
+  if (!assessment) {
     return (
       <div className="bg-white border border-gray-200 rounded-lg p-4 h-full">
         <div className="flex items-center gap-2 mb-3">
@@ -53,6 +63,8 @@ export default function RouteAssessment({ steps, isLoading = false }: Props) {
       </div>
     )
   }
+  const encoded = btoa(JSON.stringify(steps))
+  const shareUrl = `http://localhost:3000/share?data=${encoded}`
 
   if (isLoading) {
     return (
@@ -72,7 +84,14 @@ export default function RouteAssessment({ steps, isLoading = false }: Props) {
     )
   }
 
-  const assessment = generateRouteAssessment(steps)
+  if (!assessment) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-gray-500 animate-pulse">
+        <LoaderCircle className="w-4 h-4 animate-spin text-blue-600" />
+        <span>Analyzing route...</span>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-full">
@@ -92,16 +111,8 @@ export default function RouteAssessment({ steps, isLoading = false }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-green-600" />
-            <span className="text-sm text-gray-600">
-              Est. {assessment.estimatedTime}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-600" />
-            <span className="text-sm text-gray-600">
-              {assessment.difficulty} difficulty
-            </span>
+            <span className="text-sm text-gray-600">{assessment.safety}</span>
           </div>
         </div>
 
@@ -121,6 +132,14 @@ export default function RouteAssessment({ steps, isLoading = false }: Props) {
             ))}
           </ul>
         </div>
+
+        <a
+          href={shareUrl}
+          target="_blank"
+          className="text-blue-600 underline text-sm "
+        >
+          Share this route
+        </a>
       </div>
     </div>
   )

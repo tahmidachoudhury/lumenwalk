@@ -15,6 +15,8 @@ interface Step {
 
 interface Props {
   steps: Step[]
+  distance: number
+  duration: number
 }
 
 function getManeuverIcon(instruction: string) {
@@ -41,12 +43,20 @@ function formatDistance(distance: number) {
   return `${Math.round(distance)}m`
 }
 
-export default function NavigationSteps({ steps }: Props) {
+export default function NavigationSteps({ steps, distance, duration }: Props) {
   return (
     <div className="bg-gray-900 text-white p-4 rounded-lg h-full flex flex-col">
-      <h2 className="text-lg font-semibold mb-4 flex-shrink-0">
-        Route Instructions
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg text-foreground font-semibold flex-shrink-0">
+          Route Instructions
+        </h2>
+        <h2 className="text-lg font-semibold">
+          {duration !== undefined &&
+            (duration >= 60
+              ? `${Math.round(duration / 60)} min`
+              : `${Math.round(duration)} sec`)}
+        </h2>
+      </div>
       {steps.length === 0 ? (
         <p className="text-gray-500">Choose a route to view instructions.</p>
       ) : (

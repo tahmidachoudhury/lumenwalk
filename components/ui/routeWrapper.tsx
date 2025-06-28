@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ChevronUp, ChevronDown } from "lucide-react"
 import NavigationSteps from "./navigation-steps"
 import RouteAssessment from "./route-assessment"
@@ -12,16 +12,39 @@ interface Step {
   distance: number
 }
 
-interface Props {
-  steps: Step[]
-  isAssessmentLoading?: boolean
+interface Assessment {
+  summary: string
+  insights: string[]
+  difficulty: string
+  estimatedTime: string
 }
 
-export default function RouteWrapper({
-  steps,
-  isAssessmentLoading = false,
-}: Props) {
+interface Props {
+  steps: Step[]
+  distance: number
+  duration: number
+}
+
+export default function RouteWrapper({ steps, distance, duration }: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [assessment, setAssessment] = useState<Assessment | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const getAssessment = async () => {
+      setIsLoading(true)
+      const res = await fetch("/api/route-assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ steps }),
+      })
+      const data = await res.json()
+      setAssessment(data)
+      setIsLoading(false)
+    }
+
+    getAssessment()
+  }, [steps])
 
   return (
     <>
@@ -34,13 +57,21 @@ export default function RouteWrapper({
 
           <div className="flex flex-col gap-4 h-full min-h-0">
             {/* Navigation Steps - Fixed height, scrollable */}
-            <div className="h-1/2 min-h-0 ">
-              <NavigationSteps steps={steps} />
+            <div className="h-[60%] min-h-0 ">
+              <NavigationSteps
+                steps={steps}
+                distance={distance}
+                duration={duration}
+              />
             </div>
 
             {/* AI Assessment - Remaining space */}
             <div className="flex-1 min-h-0">
-              <RouteAssessment steps={steps} isLoading={isAssessmentLoading} />
+              <RouteAssessment
+                steps={steps}
+                assessment={assessment}
+                isLoading={isLoading}
+              />
             </div>
           </div>
         </div>
@@ -86,8 +117,8 @@ export default function RouteWrapper({
               {/* AI Assessment - Remaining space */}
               <div className="flex-1 min-h-0">
                 <RouteAssessment
-                  steps={steps}
-                  isLoading={isAssessmentLoading}
+                  assessment={assessment}
+                  isLoading={isLoading}
                 />
               </div>
             </div>
