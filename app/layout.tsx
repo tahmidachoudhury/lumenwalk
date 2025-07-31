@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import "mapbox-gl/dist/mapbox-gl.css"
+import Head from "next/head"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="59b5e23e-fd6e-4201-9ae5-59a0bc2bedeb"
+        ></script>
+      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
