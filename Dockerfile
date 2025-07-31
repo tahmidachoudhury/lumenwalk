@@ -3,6 +3,9 @@
 # 1. Base image
 FROM node:18-alpine
 
+# Install git
+RUN apk add --no-cache git
+
 # 2. Set working directory
 WORKDIR /app
 
