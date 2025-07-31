@@ -1,0 +1,35 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/lumenwalk
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Stopping old container..."
+            docker stop lumenwalk || true
+            docker rm lumenwalk || true
+
+            echo "Building new image..."
+            docker build -t lumenwalk:latest .
+
+            echo "Running new container..."
+            docker run -d --name lumenwalk \
+              --env-file .env.local \
+              -p 3000:3000 lumenwalk:latest
