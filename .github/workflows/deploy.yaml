@@ -28,6 +28,8 @@ jobs:
             echo "Stopping old container..."
             docker stop lumenwalk || true
             docker rm lumenwalk || true
+            docker system prune -a -f
+            docker builder prune --all -f
 
             echo "Building new image..."
             docker build -t lumenwalk:latest .
