@@ -1,4 +1,4 @@
-name: Deploy to AWS EC2
+name: CI/CD Deploy to AWS EC2 with Test Gate
 
 on:
   push:
@@ -6,38 +6,62 @@ on:
       - main
 
 jobs:
-  deploy:
+  # Test job: install deps + run build (typescript linter acts as test)
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: SSH and deploy
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ubuntu/lumenwalk
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            echo "Disk space before build:"
-            df -h
+      - name: Install dependencies
+        run: npm install
 
-            echo "Pulling latest code..."
-            git pull origin main
+      - name: Run build (linter acts as testing stage)
+        run: npm run build
 
-            echo "Stopping old container..."
-            docker stop lumenwalk || true
-            docker rm lumenwalk || true
-            docker system prune -a -f
-            docker builder prune --all -f
+    # Deploy job: only runs if test passes
+    deploy:
+      needs: test
+      runs-on: ubuntu-latest
 
-            echo "Building new image..."
-            docker build -t lumenwalk:latest .
+      steps:
+        - name: SSH and deploy
+          uses: appleboy/ssh-action@v1.0.0
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ubuntu
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              cd /home/ubuntu/lumenwalk
 
-            echo "Running new container..."
-            docker run -d --name lumenwalk \
-              --env-file .env.local \
-              -p 3000:3000 lumenwalk:latest
+              echo "Disk space before build:"
+              df -h
 
-            echo "Disk space after build:"
-            df -h
+              echo "Pulling latest code..."
+              git pull origin main
+
+              echo "Building new image..."
+              docker build -t lumenwalk:latest .
+
+              echo "Stopping old container..."
+              docker stop lumenwalk || true
+              docker rm lumenwalk || true
+              docker system prune -a -f
+              docker builder prune --all -f
+
+              echo "Running new container..."
+              docker run -d --name lumenwalk \
+                --env-file .env.local \
+                -p 3000:3000 lumenwalk:latest
+
+              echo "Waiting for container to boot..."
+              sleep 5
+
+              echo "Checking app health..."
+              curl -f http://localhost:3000/api/status || {
+                echo "❌ Healthcheck failed!"
+                exit 1
+              }
+
+              echo "Disk space after build:"
+              df -h
