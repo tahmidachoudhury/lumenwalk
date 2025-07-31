@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "node scripts/write-commit.js",
     "build": "next build",
     "start": "next start",
     "export": "next export",
