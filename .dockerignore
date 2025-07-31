@@ -1,7 +1,6 @@
 # Ignore dev-related folders
 node_modules
 .vscode
-.git
 .gitignore
 npm-debug.log
 

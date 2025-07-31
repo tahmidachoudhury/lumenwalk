@@ -10,6 +10,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # 3. Copy package files
+COPY .git .git
 COPY package*.json ./
 
 # 4. Install deps
