@@ -19,6 +19,9 @@ jobs:
           script: |
             cd /home/ubuntu/lumenwalk
 
+            echo "Disk space before build:"
+            df -h
+
             echo "Pulling latest code..."
             git pull origin main
 
