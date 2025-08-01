@@ -1,4 +1,4 @@
-name: CI/CD: Docker Build + Fast Deploy
+name: CI/CD Docker Build + Fast Deploy
 
 on:
   push:
