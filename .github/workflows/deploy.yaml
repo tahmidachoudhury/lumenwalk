@@ -68,6 +68,9 @@ jobs:
               exit 1
             }
 
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -a -f
+
             echo "Disk space after build:"
             df -h
 
