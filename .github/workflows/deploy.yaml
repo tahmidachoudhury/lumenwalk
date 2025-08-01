@@ -1,4 +1,4 @@
-name: CI/CD Deploy to AWS EC2 with Test Gate
+name: CI/CD: Docker Build + Fast Deploy
 
 on:
   push:
@@ -6,53 +6,58 @@ on:
       - main
 
 jobs:
-  # Test job: install deps + run build (typescript linter acts as test)
-  test:
+  #Test job: The image only gets pushed to dockerhub if this job succeeds ✅
+  #Testing stage for image as "npm run build" has to pass
+  build-and-push:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      - name: Run build (linter acts as testing stage)
-        run: npm run build
+      - name: Build Docker image
+        run: docker build -t tahmidachoudhury/lumenwalk:latest .
 
-  # Deploy job: only runs if test passes
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push image to Docker Hub
+        run: docker push tahmidachoudhury/lumenwalk:latest
+
+  #Pull from dockerhub and remove the previous container
   deploy:
-    needs: test
+    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH and deploy
+      - name: SSH and deploy from Docker Hub
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/lumenwalk
+            echo "🔐 Logging into Docker Hub..."
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             echo "Disk space before build:"
             df -h
 
-            echo "Pulling latest code..."
-            git pull origin main
+            echo "📦 Pulling latest image..."
+            docker pull tahmidachoudhury/lumenwalk:latest
 
-            echo "Stopping old container..."
+            echo "🛑 Stopping and removing old container..."
             docker stop lumenwalk || true
             docker rm lumenwalk || true
-            docker system prune -a -f
-            docker builder prune --all -f
 
-            echo "Building new image..."
-            docker build -t lumenwalk:latest .
-
-            echo "Running new container..."
+            echo "🚀 Running latest container..."
             docker run -d --name lumenwalk \
-              --env-file .env.local \
-              -p 3000:3000 lumenwalk:latest
+              --env-file /home/ubuntu/lumenwalk/.env.local \
+              -p 3000:3000 \
+              tahmidachoudhury/lumenwalk:latest
 
             echo "Waiting for container to boot..."
             sleep 5
@@ -65,3 +70,5 @@ jobs:
 
             echo "Disk space after build:"
             df -h
+
+            echo "✅ Deploy complete"
