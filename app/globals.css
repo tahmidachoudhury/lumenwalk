@@ -25,19 +25,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.mapboxgl-ctrl-top-left .mapboxgl-ctrl {
-  background-color: #111827 !important; /* dark background */
-  border: none;
-  border-radius: 0.5rem;
-  font-family: "Inter", sans-serif;
-}
-
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 
 .mapboxgl-ctrl input {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+.mapboxgl-ctrl-geocoder ul {
   background-color: #1f2937 !important;
   color: #f9fafb !important;
 }

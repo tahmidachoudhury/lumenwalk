@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -22,15 +22,15 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
     <>
       {/* Sidebar */}
       <div
-        className={`${
-          isOpen ? "w-[30%]" : "w-0"
-        } transition-all duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col overflow-hidden`}
+        className={`fixed top-0 left-0 h-full z-40 bg-white border-r border-gray-200 flex flex-col shadow-md transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0 w-[30%]" : "-translate-x-full w-[30%]"
+        }`}
       >
         {isOpen && (
           <div className="flex flex-col h-full overflow-y-auto">
             {/* AI Assessment Section */}
             <div className="border-b border-gray-200 p-4">
-              <AIAssessment routeData={routeData} />
+              <AIAssessment />
             </div>
 
             {/* Police Assessment Section */}
@@ -57,6 +57,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
       </div>
 
       {/* Toggle Arrow */}
+
       <button
         onClick={toggleSidebar}
         className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md p-2 shadow-md hover:bg-gray-50 transition-colors duration-200"

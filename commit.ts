@@ -1,1 +1,1 @@
-export const GIT_COMMIT = '2ad311d32ab2cd459082284e8652107a09182eb7';
+export const GIT_COMMIT = 'b921e8d74928bb2b449c703e7186f433303aa62a';

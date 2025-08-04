@@ -8,6 +8,7 @@ import { useRef, useEffect, useState } from "react"
 import RouteWrapper from "./RouteWrapper"
 import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
+import Sidebar from "./Sidebar"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
 
@@ -60,26 +61,25 @@ export default function MapView() {
         )}&to=${destination.join(",")}`
       : ""
 
-  console.log(steps, distance, duration, origin, destination)
-
   return (
     <div className="flex h-screen w-full">
       {/* Sidebar */}
-      <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
+      <Sidebar />
+      {/* <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
         <RouteWrapper steps={steps} distance={distance} duration={duration} />
         {origin && destination && (
           <a
             href={shareUrl}
             target="_blank"
-            className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded shadow-lg transition"
+            className="fixed bottom-6 right-6 z-20 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded shadow-lg transition"
             rel="noreferrer"
           >
             🔗 Share Route
           </a>
         )}
-      </div>
+      </div> */}
       {/* Map */}
-      <div ref={mapContainer} className="w-[70%] h-full" />
+      <div ref={mapContainer} className="w-[100%] h-full" />
     </div>
   )
 }

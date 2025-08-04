@@ -41,13 +41,13 @@ export default function SharePage() {
       profile: "mapbox/walking",
       geometries: "geojson",
       controls: {
-        inputs: false,
-        instructions: false,
-        profileSwitcher: false,
+        inputs: true,
+        instructions: true,
+        profileSwitcher: true,
       },
     })
 
-    map.addControl(directions, "top-left")
+    map.addControl(directions, "top-right")
     directions.setOrigin(from)
     directions.setDestination(to)
 
