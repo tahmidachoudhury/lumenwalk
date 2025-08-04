@@ -9,7 +9,7 @@ interface PoliceAssessmentProps {
 }
 
 export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
-  const [assessment, setAssessment] = useState<string>("")
+  const [assessment, setAssessment] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
