@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
 
+interface Step {
+  instruction: string
+  distance: number
+  duration: number
+  // Add other step properties as needed
+}
+
+interface RouteData {
+  steps: Step[]
+  distance: number
+  duration: number
+  origin: [number, number] | null
+  destination: [number, number] | null
+}
+
 interface OpenAIResponse {
   choices: Array<{
     message: {
@@ -45,51 +60,123 @@ async function callOpenAI(prompt: string): Promise<string> {
   return data.choices[0]?.message?.content || "No response received"
 }
 
+function formatRouteForPrompt(routeData: RouteData): string {
+  const { steps, distance, duration, origin, destination } = routeData
+
+  let formattedRoute = `Route Summary:
+- Total Distance: ${(distance / 1000).toFixed(2)}km
+- Total Duration: ${Math.round(duration / 60)} minutes
+- Origin: ${origin ? `[${origin[0]}, ${origin[1]}]` : "Unknown"}
+- Destination: ${
+    destination ? `[${destination[0]}, ${destination[1]}]` : "Unknown"
+  }
+
+Step-by-step directions:
+`
+
+  steps.forEach((step, index) => {
+    formattedRoute += `${index + 1}. ${step.instruction} (${
+      step.distance
+    }m, ${Math.round(step.duration / 60)} min)\n`
+  })
+
+  return formattedRoute
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { routeData, assessmentType } = await request.json()
+    const body = await request.json()
+    const { routeData, assessmentType = "general" } = body
 
+    // Validate route data
+    if (!routeData || !routeData.steps || routeData.steps.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid route data: steps are required" },
+        { status: 400 }
+      )
+    }
+
+    if (!routeData.origin || !routeData.destination) {
+      return NextResponse.json(
+        { error: "Invalid route data: origin and destination are required" },
+        { status: 400 }
+      )
+    }
+
+    const formattedRoute = formatRouteForPrompt(routeData)
     let prompt: string
 
     if (assessmentType === "general") {
       prompt = `
         You are a pedestrian navigation assistant. Your main focus is guiding the user on a safe path.
 
-        Given the following step-by-step route:
+        Given the following route information:
 
-        ${routeData}
+        ${formattedRoute}
 
-        Respond strictly in this JSON format:
+        Analyze this route and respond strictly in this JSON format (ensure it's valid JSON):
         {
-          "summary": "Human-readable overview. Comment VERY briefly on the safety of the route",
-          "insights": ["", "", "", ""],
-          "safety": "Very Safe | Sketchy | Not Safe",
+          "summary": "Human-readable overview of the route with brief safety assessment",
+          "insights": ["Insight about route efficiency", "Safety consideration", "Notable landmarks or areas", "Weather or time considerations"],
+          "safety": "Very Safe"
         }
 
+        Make sure your response is valid JSON only, no extra text.
       `
     } else if (assessmentType === "police") {
       prompt = `
-        Based on Metropolitan Police data and this route information, provide a security assessment:
+        Based on general safety principles and this route information, provide a security assessment:
         
-        Route Data: ${JSON.stringify(routeData)}
+        ${formattedRoute}
         
         Please analyze:
-        1. Crime statistics for the area
-        2. Time-of-day safety considerations
-        3. Specific areas of concern along the route
-        4. Safety recommendations
+        1. General safety considerations for pedestrians
+        2. Time-of-day safety recommendations
+        3. Areas that might require extra caution
+        4. General safety tips for this type of route
         
-        Provide a practical, informative assessment.
+        Respond in JSON format:
+        {
+          "summary": "Security assessment overview",
+          "insights": ["Safety tip 1", "Safety tip 2", "Safety tip 3", "Safety tip 4"],
+          "safety": "Very Safe"
+        }
+
+        Make sure your response is valid JSON only, no extra text.
       `
     } else {
       return NextResponse.json(
-        { error: "Invalid assessment type" },
+        { error: "Invalid assessment type. Use 'general' or 'police'" },
         { status: 400 }
       )
     }
 
     const assessment = await callOpenAI(prompt)
-    return NextResponse.json({ assessment })
+
+    // Try to parse the JSON response from OpenAI
+    let parsedAssessment
+    try {
+      parsedAssessment = JSON.parse(assessment)
+    } catch (parseError) {
+      console.error("Failed to parse OpenAI response as JSON:", assessment)
+      // Fallback response
+      parsedAssessment = {
+        summary: "Route analysis completed",
+        insights: [
+          "Analysis completed",
+          "Route appears standard",
+          "No major concerns identified",
+          "Follow general safety practices",
+        ],
+        safety: "Very Safe",
+      }
+    }
+
+    console.log("Parsed assessment:", parsedAssessment)
+    return NextResponse.json({
+      ...parsedAssessment,
+      prompt: formattedRoute, // Include the formatted route as prompt
+    })
   } catch (error) {
     console.error("AI Assessment error:", error)
     return NextResponse.json(

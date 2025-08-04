@@ -4,7 +4,7 @@ import AIAssessment from "./AIAssessment"
 import PoliceAssessment from "./PoliceAssessment"
 import RouteInstructions from "./RouteInstructions"
 import { Clock, MapPin } from "lucide-react"
-import { useRoute } from "./RouteContext"
+import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 
 interface RouteWrapperProps {

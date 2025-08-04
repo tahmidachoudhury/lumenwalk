@@ -1,4 +1,10 @@
-export async function getAIAssessment(routeData: any): Promise<string> {
+interface AIAssessment {
+  summary: string
+  insights: string[]
+  safety: string
+}
+
+export async function getAIAssessment(routeData: any): Promise<AIAssessment> {
   try {
     const response = await fetch("/api/ai-assessment", {
       method: "POST",
@@ -16,14 +22,20 @@ export async function getAIAssessment(routeData: any): Promise<string> {
     }
 
     const data = await response.json()
-    return data.assessment
+    return {
+      summary: data.summary,
+      insights: data.insights,
+      safety: data.safety,
+    }
   } catch (error) {
     console.error("Failed to get AI assessment:", error)
     throw error
   }
 }
 
-export async function getPoliceAssessment(routeData: any): Promise<string> {
+export async function getPoliceAssessment(
+  routeData: any
+): Promise<AIAssessment> {
   try {
     const response = await fetch("/api/ai-assessment", {
       method: "POST",
@@ -41,7 +53,11 @@ export async function getPoliceAssessment(routeData: any): Promise<string> {
     }
 
     const data = await response.json()
-    return data.assessment
+    return {
+      summary: data.summary,
+      insights: data.insights,
+      safety: data.safety,
+    }
   } catch (error) {
     console.error("Failed to get police assessment:", error)
     throw error

@@ -6,7 +6,7 @@ import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css"
-import { RouteProvider } from "@/components/RouteContext"
+import { RouteProvider } from "@/context/RouteContext"
 import { Step } from "@/services/routeUtils"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!

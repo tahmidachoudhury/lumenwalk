@@ -1,5 +1,5 @@
 import RouteMap from "@/components/MapView"
-import { RouteProvider } from "@/components/RouteContext"
+import { RouteProvider } from "@/context/RouteContext"
 
 export default function HomePage() {
   return (

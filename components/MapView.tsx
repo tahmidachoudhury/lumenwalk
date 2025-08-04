@@ -6,7 +6,7 @@ import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css"
 import { useRef, useEffect, useState } from "react"
 import RouteWrapper from "./RouteWrapper"
-import { useRoute } from "./RouteContext"
+import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
