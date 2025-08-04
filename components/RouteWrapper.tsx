@@ -59,7 +59,7 @@ export default function RouteWrapper({
       <div className="flex-1 overflow-y-auto">
         {/* AI Assessment Section */}
         <div className="border-b border-gray-200 p-4">
-          <AIAssessment routeData={routeData} />
+          <AIAssessment />
         </div>
 
         {/* Police Assessment Section */}
