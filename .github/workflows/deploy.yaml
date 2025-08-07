@@ -53,6 +53,9 @@ jobs:
             docker stop lumenwalk || true
             docker rm lumenwalk || true
 
+            echo "🧹 Cleaning up unused Docker resources..."
+            docker system prune -a -f --volumes
+
             echo "🚀 Running latest container..."
             docker run -d --name lumenwalk \
               --env-file /home/ubuntu/lumenwalk/.env.production \
