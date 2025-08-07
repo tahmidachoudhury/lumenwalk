@@ -2,6 +2,11 @@
 
 LumenWalk is a smart walking route planner designed to help users choose the **safest** path between two locations — especially for night-time walks.
 
+## 📐 LumenWalk Architecture
+
+![LumenWalk Architecture](architecture/lumenwalk.drawio.png)
+
+
 ## 🛠 What It Does
 
 - Lets you input a **start** and **destination**
