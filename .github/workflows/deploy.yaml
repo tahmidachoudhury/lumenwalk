@@ -58,7 +58,7 @@ jobs:
 
             echo "🚀 Running latest container..."
             docker run -d --name lumenwalk \
-              --env-file /home/ubuntu/lumenwalk/.env \
+              --env-file /home/ubuntu/lumenwalk/.env.local \
               -p 3000:3000 \
               tahmidachoudhury/lumenwalk:latest
 
