@@ -87,7 +87,7 @@ export default function RouteInstructions({
           turn-by-turn directions.
         </p>
       ) : (
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden ">
           <div className="h-full overflow-y-auto scrollbar-hide space-y-2 pr-2">
             {steps.map((step, index) => (
               <div

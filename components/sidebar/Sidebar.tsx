@@ -14,11 +14,13 @@ interface SidebarProps {
 
 export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
+  const [currentStep, setCurrentStep] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     // Only run if we have meaningful route data
     if (steps.length > 0 && origin && destination) {
+      setCurrentStep(0)
       setIsOpen(true)
     }
   }, [steps.length, origin, destination])
@@ -36,35 +38,50 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
         }`}
       >
         {isOpen && (
-          <div className="flex flex-col h-full overflow-y-auto">
-            {/* AI Assessment Section */}
-            <div className="border-b border-gray-200 p-4">
-              <AIAssessment />
-            </div>
+          <div>
+            {/* AI and Police analysis Instructions Section */}
+            {currentStep === 0 && (
+              <div className="flex flex-col h-full overflow-y-auto">
+                {/* AI Assessment Section */}
+                <div className="border-b border-gray-200 p-4">
+                  <AIAssessment />
+                </div>
 
-            {/* Police Assessment Section */}
-            <div className="border-b border-gray-200 p-4">
-              <PoliceAssessment routeData={routeData} />
-            </div>
+                {/* Police Assessment Section */}
+                <div className="border-b border-gray-200 p-4">
+                  <PoliceAssessment routeData={routeData} />
+                </div>
 
-            {/* Call to Action */}
-            <div className="border-b border-gray-200 p-4">
-              <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
-                onClick={() => console.log("Start Route clicked")}
-              >
-                Start Route
-              </button>
-            </div>
+                {/* Call to Action */}
+                <div className="border-b border-gray-200 p-4">
+                  <button
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+                    onClick={() => setCurrentStep(1)}
+                  >
+                    Start Route
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Route Instructions Section */}
-            <div className="flex-1 p-4 min-h-0">
-              <RouteInstructions
-                steps={steps}
-                distance={distance}
-                duration={duration}
-              />
-            </div>
+            {currentStep === 1 && (
+              <div className="flex-1 p-4 min-h-0">
+                <div
+                  onClick={() => {
+                    setCurrentStep(0)
+                  }}
+                  className="cursor-pointer text-blue-600 hover:underline mb-4"
+                >
+                  ← Go back
+                </div>
+                <RouteInstructions
+                  steps={steps}
+                  distance={distance}
+                  duration={duration}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
