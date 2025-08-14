@@ -1,3 +1,4 @@
+import { mapboxToken } from "@/components/MapView"
 import { Step } from "./routeUtils"
 
 interface MapboxDirectionsResponse {
@@ -29,7 +30,7 @@ export async function getRouteInstructions(
   totalDuration: number
 }> {
   const coordinates = `${start[0]},${start[1]};${end[0]},${end[1]}`
-  const url = `${MAPBOX_API_URL}/${profile}/${coordinates}?steps=true&geometries=geojson&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+  const url = `${MAPBOX_API_URL}/${profile}/${coordinates}?steps=true&geometries=geojson&access_token=${mapboxToken}`
 
   const response = await fetch(url)
 
@@ -73,7 +74,7 @@ export async function getRoute(
   profile: "driving" | "walking" | "cycling" = "walking"
 ) {
   const coordinates = `${start[0]},${start[1]};${end[0]},${end[1]}`
-  const url = `${MAPBOX_API_URL}/${profile}/${coordinates}?geometries=geojson&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+  const url = `${MAPBOX_API_URL}/${profile}/${coordinates}?geometries=geojson&access_token=${mapboxToken}`
 
   const response = await fetch(url)
 

@@ -8,8 +8,9 @@ import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css"
 import { RouteProvider } from "@/context/RouteContext"
 import { Step } from "@/services/routeUtils"
+import { mapboxToken } from "@/components/MapView"
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
+mapboxgl.accessToken = mapboxToken!
 
 export default function SharePage() {
   const searchParams = useSearchParams()

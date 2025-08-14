@@ -10,12 +10,12 @@ import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 import Sidebar from "./Sidebar"
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
-console.log("All env vars:", {
-  mapbox: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
-  nodeEnv: process.env.NODE_ENV,
-  allEnvKeys: Object.keys(process.env).filter((key) => key.includes("MAPBOX")),
-})
+//I decided to hardcode this as the efforts needed to keep this secret is complicated and unmaintainable
+//additionally the risk level is very low and I have restricted the token to my domain and set usage limits
+export const mapboxToken =
+  "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21jZnZvYWUyMGFxeDJrc2RpN2dleDI5bCJ9.b-3th-SG4GW-y91LO2XStw"
+
+mapboxgl.accessToken = mapboxToken
 
 export default function MapView() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
