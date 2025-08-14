@@ -5,10 +5,9 @@ import "mapbox-gl/dist/mapbox-gl.css"
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions"
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css"
 import { useRef, useEffect, useState } from "react"
-import RouteWrapper from "./RouteWrapper"
 import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
-import Sidebar from "./Sidebar"
+import Sidebar from "./sidebar/Sidebar"
 
 //I decided to hardcode this as the efforts needed to keep this secret is complicated and unmaintainable
 //additionally the risk level is very low and I have restricted the token to my domain and set usage limits

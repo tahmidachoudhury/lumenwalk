@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import AIAssessment from "./AIAssessment"
 import PoliceAssessment from "./PoliceAssessment"
 import RouteInstructions from "./RouteInstructions"
+import { useRoute } from "@/context/RouteContext"
 
 interface SidebarProps {
   routeData?: any
@@ -12,7 +13,15 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
+  const { steps, distance, duration, origin, destination } = useRoute()
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    // Only run if we have meaningful route data
+    if (steps.length > 0 && origin && destination) {
+      setIsOpen(true)
+    }
+  }, [steps.length, origin, destination])
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -50,7 +59,11 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
 
             {/* Route Instructions Section */}
             <div className="flex-1 p-4 min-h-0">
-              <RouteInstructions steps={routeSteps} />
+              <RouteInstructions
+                steps={steps}
+                distance={distance}
+                duration={duration}
+              />
             </div>
           </div>
         )}

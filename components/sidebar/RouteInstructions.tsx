@@ -1,33 +1,39 @@
 "use client"
 
 import {
-  ArrowUp,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  ArrowUpLeft,
   Navigation,
+  MapPin,
+  Footprints,
+  CornerLeftUp,
+  CornerRightUp,
+  MoveUpRight,
+  MoveUpLeft,
+  MoveUp,
+  CornerUpRightIcon,
+  CornerUpLeft,
 } from "lucide-react"
 
 import { Step } from "@/services/routeUtils"
 
 interface RouteInstructionsProps {
   steps: Step[]
+  distance: number
+  duration: number
 }
 
 function getManeuverIcon(instruction: string) {
   const lowerInstruction = instruction.toLowerCase()
 
   if (lowerInstruction.includes("turn left")) {
-    return <ArrowLeft className="w-4 h-4" />
+    return <CornerUpLeft className="w-4 h-4 text-blue-900" />
   } else if (lowerInstruction.includes("turn right")) {
-    return <ArrowRight className="w-4 h-4" />
+    return <CornerUpRightIcon className="w-4 h-4 text-blue-900" />
   } else if (lowerInstruction.includes("keep right")) {
-    return <ArrowUpRight className="w-4 h-4" />
+    return <MoveUpRight className="w-4 h-4 text-blue-900" />
   } else if (lowerInstruction.includes("keep left")) {
-    return <ArrowUpLeft className="w-4 h-4" />
+    return <MoveUpLeft className="w-4 h-4 text-blue-900" />
   } else {
-    return <ArrowUp className="w-4 h-4" />
+    return <MoveUp className="w-4 h-4 text-blue-900" />
   }
 }
 
@@ -39,14 +45,40 @@ function formatDistance(distance: number): string {
   return `${Math.round(distance)}m`
 }
 
-export default function RouteInstructions({ steps }: RouteInstructionsProps) {
+function formatDuration(duration: number): string {
+  const minutes = Math.round(duration / 60)
+  if (minutes < 60) {
+    return `${minutes} min`
+  }
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+  return `${hours}h ${remainingMinutes}m`
+}
+
+export default function RouteInstructions({
+  steps,
+  distance,
+  duration,
+}: RouteInstructionsProps) {
   return (
     <div className="space-y-3 h-full flex flex-col">
       <div className="flex items-center gap-2">
         <Navigation className="w-5 h-5 text-green-600" />
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-gray-900 mr-auto">
           Turn-by-Turn Directions
         </h3>
+        {steps.length > 0 && (
+          <div className="flex items-center gap-4 text-sm text-gray-600">
+            <div className="flex items-center gap-1">
+              <MapPin className="w-4 h-4 text-red-600" />
+              <span>{formatDistance(distance)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Footprints className="w-4 h-4 text-blue-600" />
+              <span>{formatDuration(duration)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {steps.length === 0 ? (
