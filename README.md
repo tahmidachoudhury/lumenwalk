@@ -4,7 +4,7 @@ LumenWalk is a smart walking route planner designed to help users choose the **s
 
 ## 📐 LumenWalk Architecture
 
-![LumenWalk Architecture](architecture/lumenwalk.drawio.png)
+![LumenWalk Architecture](architecture/lumenwalk.gif)
 
 This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. GitHub Actions handles CI/CD, and external services like Umami and Sentry provide analytics and error tracking. HTTPS is secured using Certbot, and uptime is monitored via UptimeRobot.
 
