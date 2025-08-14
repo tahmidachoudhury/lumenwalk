@@ -11,6 +11,11 @@ import { Step } from "@/services/routeUtils"
 import Sidebar from "./Sidebar"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!
+console.log("All env vars:", {
+  mapbox: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
+  nodeEnv: process.env.NODE_ENV,
+  allEnvKeys: Object.keys(process.env).filter((key) => key.includes("MAPBOX")),
+})
 
 export default function MapView() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
