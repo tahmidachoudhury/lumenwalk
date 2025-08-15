@@ -80,7 +80,7 @@ export default function AIAssessment({
   }
 
   return (
-    <div className="bg-white rounded-lg h-full">
+    <div className="bg-white border border-gray-200 rounded-lg p-4 h-full">
       <div className="flex items-center gap-2 mb-4">
         <Brain className="w-5 h-5 text-blue-600" />
         <h2 className="text-lg font-semibold text-gray-900">
@@ -127,7 +127,7 @@ export default function AIAssessment({
           </div>
         </div>
       )}
-      {!loading && (
+      {!assessmentResult.current && !loading && (
         <p className="text-sm text-gray-500">
           Select a route to get AI analysis
         </p>
