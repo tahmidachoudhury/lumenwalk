@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import AIAssessment from "./AIAssessment"
 import PoliceAssessment from "./PoliceAssessment"
@@ -16,6 +16,13 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
   const [currentStep, setCurrentStep] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
+
+  //this will allow me to track if the steps have changed
+  const prevStepsLength = useRef<number>(0)
+
+  //this will store the assessment result so users can
+  //come back to it
+  const assessmentRef = useRef<any>(null)
 
   useEffect(() => {
     // Only run if we have meaningful route data
@@ -44,7 +51,10 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
               <div className="flex flex-col h-full overflow-y-auto">
                 {/* AI Assessment Section */}
                 <div className="border-b border-gray-200 p-4">
-                  <AIAssessment />
+                  <AIAssessment
+                    prevStepsLength={prevStepsLength}
+                    assessmentResult={assessmentRef}
+                  />
                 </div>
 
                 {/* Police Assessment Section */}

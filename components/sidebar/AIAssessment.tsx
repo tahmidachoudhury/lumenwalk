@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, RefObject } from "react"
 import {
   Brain,
   AlertTriangle,
@@ -11,9 +11,16 @@ import {
 import { getAIAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
 
-export default function AIAssessment() {
+interface AssessmentProps {
+  prevStepsLength: RefObject<number>
+  assessmentResult: RefObject<any>
+}
+
+export default function AIAssessment({
+  prevStepsLength,
+  assessmentResult,
+}: AssessmentProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
-  const [assessment, setAssessment] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,17 +33,17 @@ export default function AIAssessment() {
     destination,
   }
 
-  // Check if we have valid route data
-  const hasRouteData = steps.length > 0 && origin && destination
-
   useEffect(() => {
-    if (hasRouteData) {
+    //when it is the first change, prevsteps is 0 (falsy) and steps.length
+    //will be truthy -> afterwards it will keep checking if the number of steps
+    //changed
+    const stepsChanged = prevStepsLength.current !== steps.length
+    if (stepsChanged) {
+      prevStepsLength.current = steps.length
+      assessmentResult.current = null
       fetchAssessment()
-    } else {
-      // Clear assessment when no route data
-      setAssessment(null)
     }
-  }, [hasRouteData, steps, distance, duration, origin, destination])
+  }, [steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)
@@ -44,9 +51,8 @@ export default function AIAssessment() {
 
     try {
       const result = await getAIAssessment(routeData)
-      console.log(result)
 
-      setAssessment(result)
+      assessmentResult.current = result
     } catch (err) {
       setError("Failed to get AI assessment")
       console.error("AI Assessment error:", err)
@@ -82,11 +88,12 @@ export default function AIAssessment() {
         </h2>
       </div>
 
-      {assessment && !loading && (
+      {assessmentResult.current && !loading && (
         <div className="space-y-4">
           <div>
             <p className="text-gray-700 text-sm leading-relaxed">
-              {assessment.summary} {/* Changed from routeData.summary */}
+              {assessmentResult.current.summary}{" "}
+              {/* Changed from routeData.summary */}
             </p>
           </div>
 
@@ -94,7 +101,7 @@ export default function AIAssessment() {
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
               <span className="text-sm text-gray-600">
-                {assessment.safety}
+                {assessmentResult.current.safety}
               </span>{" "}
               {/* Changed from routeData.safety */}
             </div>
@@ -105,20 +112,22 @@ export default function AIAssessment() {
               Key Insights
             </h3>
             <ul className="space-y-1">
-              {assessment.insights?.map((insight: string, i: number) => (
-                <li
-                  key={i}
-                  className="text-xs text-gray-600 flex items-start gap-2"
-                >
-                  <span className="w-1 h-1 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
-                  {insight}
-                </li>
-              ))}
+              {assessmentResult.current.insights?.map(
+                (insight: string, i: number) => (
+                  <li
+                    key={i}
+                    className="text-xs text-gray-600 flex items-start gap-2"
+                  >
+                    <span className="w-1 h-1 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                    {insight}
+                  </li>
+                )
+              )}
             </ul>
           </div>
         </div>
       )}
-      {!hasRouteData && !loading && (
+      {!loading && (
         <p className="text-sm text-gray-500">
           Select a route to get AI analysis
         </p>
