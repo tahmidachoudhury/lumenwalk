@@ -25,7 +25,11 @@ export default function MapView() {
   const { steps, distance, duration, origin, destination, setRouteEvent } =
     useRoute()
   const [currentRoute, setCurrentRoute] = useState<Step[]>(steps)
-  const lightPreset = useLightPreset(-0.1276, 51.5072)
+  const lightPreset = useLightPreset()
+
+  useEffect(() => {
+    console.log("lightPreset changed to:", lightPreset)
+  }, [lightPreset])
 
   // useEffect(() => {
   //   if (mapRef.current) {
@@ -45,9 +49,19 @@ export default function MapView() {
 
     mapRef.current = map
 
-    map.once("style.load", () => {
+    if (!map) return
+
+    // set immediately if style already loaded
+    if (map.isStyleLoaded()) {
       map.setConfigProperty("basemap", "lightPreset", lightPreset)
-    })
+    }
+
+    // also handle the next time style reloads (e.g. style switch/reset)
+    const handler = () => {
+      map.setConfigProperty("basemap", "lightPreset", lightPreset)
+    }
+
+    map.on("style.load", handler)
 
     mapRef.current.addControl(new mapboxgl.NavigationControl(), "bottom-right")
 
@@ -72,8 +86,9 @@ export default function MapView() {
     return () => {
       map.remove()
       mapRef.current = null
+      map.off("style.load", handler)
     }
-  }, [])
+  }, [lightPreset])
 
   const shareUrl =
     origin && destination
