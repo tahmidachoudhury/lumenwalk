@@ -9,8 +9,8 @@ export type RouteSummary = {
   steps: Step[]
   distance: number
   duration: number
-  origin?: [number, number]
-  destination?: [number, number]
+  origin?: [number, number] | null
+  destination?: [number, number] | null
 }
 
 /**

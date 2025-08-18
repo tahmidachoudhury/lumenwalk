@@ -82,16 +82,17 @@ export default function MapView() {
         )}&to=${destination.join(",")}`
       : ""
 
-  const [fetchTrigger, setFetchTrigger] = useState(0)
-
   useEffect(() => {
-    setFetchTrigger((t) => t + 1)
+    // runs only when steps changes
+    setCurrentRoute(steps)
   }, [steps])
+
+  const shouldFetch = steps !== currentRoute
 
   return (
     <div className="flex h-screen w-full">
       {/* Sidebar */}
-      <Sidebar fetchTrigger={fetchTrigger} />
+      <Sidebar />
       {/* This is the shareroute funcitonality which i decided to not include */}
       {/* <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
         <RouteWrapper steps={steps} distance={distance} duration={duration} />

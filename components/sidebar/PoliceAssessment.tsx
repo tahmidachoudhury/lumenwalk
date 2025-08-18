@@ -1,20 +1,24 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, RefObject } from "react"
 import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
 import { getPoliceAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
+import { RouteSummary, Step } from "@/services/routeUtils"
 import { AssessmentProps } from "./AIAssessment"
-import { Step } from "@/services/routeUtils"
+
+interface assessmentProps {
+  routeData: RouteSummary
+  assessmentResult: RefObject<any>
+}
 
 export default function PoliceAssessment({
-  trigger,
+  prevStepsLength,
   assessmentResult,
 }: AssessmentProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [currentSteps, setCurrentSteps] = useState<Step[]>()
 
   // Create route data object from context
   const routeData = {
@@ -26,10 +30,13 @@ export default function PoliceAssessment({
   }
 
   useEffect(() => {
-    if (!trigger) return
-    assessmentResult.current = null
-    fetchAssessment()
-  }, [trigger, steps, distance, duration, origin, destination])
+    const stepsChanged = prevStepsLength.current == steps.length
+    if (stepsChanged) {
+      prevStepsLength.current = steps.length
+      assessmentResult.current = null
+      fetchAssessment()
+    }
+  }, [steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)

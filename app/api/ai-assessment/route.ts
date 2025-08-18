@@ -24,7 +24,7 @@ interface OpenAIResponse {
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 
 //calls openai with the gpt-4 model with the prompt as a param
-export async function callOpenAI(prompt: string): Promise<string> {
+async function callOpenAI(prompt: string): Promise<string> {
   // Add safety check first
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY environment variable is not set")

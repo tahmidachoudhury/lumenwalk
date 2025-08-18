@@ -10,14 +10,15 @@ import {
 } from "lucide-react"
 import { getAIAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
+import { RouteSummary, Step } from "@/services/routeUtils"
 
 export interface AssessmentProps {
-  trigger: number
+  prevStepsLength: RefObject<number>
   assessmentResult: RefObject<any>
 }
 
 export default function AIAssessment({
-  trigger,
+  prevStepsLength,
   assessmentResult,
 }: AssessmentProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
@@ -34,11 +35,16 @@ export default function AIAssessment({
   }
 
   useEffect(() => {
-    if (!trigger) return // skip on initial 0
-    assessmentResult.current = null
-
-    fetchAssessment()
-  }, [trigger, steps, distance, duration, origin, destination])
+    //when it is the first change, prevsteps is 0 (falsy) and steps.length
+    //will be truthy -> afterwards it will keep checking if the number of steps
+    //changed
+    const stepsChanged = prevStepsLength.current !== steps.length
+    if (stepsChanged) {
+      prevStepsLength.current = steps.length
+      assessmentResult.current = null
+      fetchAssessment()
+    }
+  }, [steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)
