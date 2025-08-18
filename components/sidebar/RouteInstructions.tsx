@@ -11,6 +11,7 @@ import {
   MoveUp,
   CornerUpRightIcon,
   CornerUpLeft,
+  Clock,
 } from "lucide-react"
 
 import { Step } from "@/services/routeUtils"
@@ -62,19 +63,22 @@ export default function RouteInstructions({
 }: RouteInstructionsProps) {
   return (
     <div className="space-y-3 h-full flex flex-col">
-      <div className="flex items-center gap-2">
-        <Navigation className="w-5 h-5 text-green-600" />
-        <h3 className="text-lg font-semibold text-gray-900 mr-auto">
-          Turn-by-Turn Directions
-        </h3>
+      <div className="flex items-center justify-between w-full">
+        {/* Left side - Icon and Title */}
+        <div className="flex flex-[4] items-center gap-2">
+          <Navigation className="w-5 h-5 text-green-600" />
+          <h3 className="text-lg font-semibold text-gray-900">
+            Turn-by-Turn Directions
+          </h3>
+        </div>
+
+        {/* Right side - Distance and Duration */}
         {steps.length > 0 && (
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="ml-auto flex flex-col items-end gap-1 text-sm text-black text-right">
             <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4 text-red-600" />
               <span>{formatDistance(distance)}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Footprints className="w-4 h-4 text-blue-600" />
               <span>{formatDuration(duration)}</span>
             </div>
           </div>

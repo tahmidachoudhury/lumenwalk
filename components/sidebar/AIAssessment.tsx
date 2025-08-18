@@ -65,8 +65,8 @@ export default function AIAssessment({
     return (
       <div className="bg-black/60 rounded-lg p-4 h-full">
         <div className="flex items-center gap-2 mb-3">
-          <Brain className="w-5 h-5 text-blue-600 animate-pulse" />
-          <h2 className="text-lg font-semibold text-gray-900">
+          <Brain className="w-5 h-5 text-white animate-pulse" />
+          <h2 className="text-lg font-semibold text-white">
             AI Route Assessment
           </h2>
         </div>
@@ -96,12 +96,12 @@ export default function AIAssessment({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1  gap-3">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-white">
+              <CheckCircle className="w-4 h-4 text-green-600 " />
+              <span className="text-sm text-white ">
                 {assessmentResult.current.safety}
-              </span>{" "}
+              </span>
             </div>
           </div>
 

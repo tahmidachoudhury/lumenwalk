@@ -38,7 +38,7 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
     return (
       <div className="bg-black/60 rounded-lg p-4 h-full">
         <div className="flex items-center gap-2 mb-3">
-          <Shield className="w-5 h-5 text-blue-800" />
+          <Shield className="w-5 h-5 text-white" />
           <h2 className="text-lg font-semibold text-white">
             Police Data Analysis
           </h2>

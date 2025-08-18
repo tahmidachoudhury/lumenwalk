@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, MoveLeft } from "lucide-react"
 import AIAssessment from "./AIAssessment"
 import PoliceAssessment from "./PoliceAssessment"
 import RouteInstructions from "./RouteInstructions"
@@ -81,9 +81,9 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
                   onClick={() => {
                     setCurrentStep(0)
                   }}
-                  className="cursor-pointer text-blue-600 hover:underline mb-4"
+                  className="cursor-pointer text-black hover:text-blue-600 mb-4"
                 >
-                  ← Go back
+                  <MoveLeft />
                 </div>
                 <RouteInstructions
                   steps={steps}
