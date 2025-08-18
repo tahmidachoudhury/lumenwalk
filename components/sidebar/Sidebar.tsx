@@ -40,7 +40,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
     <>
       {/* Sidebar - width hardcoded to 400px */}
       <div
-        className={`bg-black/20 rounded-xl backdrop-blur-sm  shadow-xl fixed top-0 left-0 h-full z-40 border-r flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`bg-black/20 rounded-xl backdrop-blur-sm  shadow-xl fixed top-0 left-0 h-full z-40 flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0 w-[400px]" : "-translate-x-full w-[400px]"
         }`}
       >
@@ -100,7 +100,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
 
       <button
         onClick={toggleSidebar}
-        className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md p-2 shadow-md hover:bg-gray-50 transition-colors duration-200"
+        className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md py-2 shadow-md hover:bg-gray-50 transition-colors duration-200"
         style={{
           left: isOpen ? "400px" : "0%",
           transition: "left 0.3s ease-in-out",
