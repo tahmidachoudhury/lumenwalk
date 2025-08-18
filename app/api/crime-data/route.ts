@@ -5,6 +5,14 @@ interface CrimeDataParams {
   lng: number
 }
 
+interface OpenAIResponse {
+  choices: Array<{
+    message: {
+      content: string
+    }
+  }>
+}
+
 export function formatCrimeDataForPrompt(crimeData: any[]) {
   if (!crimeData || crimeData.length === 0) {
     return "No recent crime data available for this area."
@@ -42,7 +50,45 @@ export async function fetchCrimeDataDirect(lat: number, lng: number) {
 }
 
 // Import existing helper functions
-import { callOpenAI, formatRouteForPrompt } from "../ai-assessment/route"
+import { formatRouteForPrompt } from "../ai-assessment/route"
+
+//calls openai with the gpt-4 model with the prompt as a param
+async function callOpenAI(prompt: string): Promise<string> {
+  // Add safety check first
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY environment variable is not set")
+  }
+
+  const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+
+  const response = await fetch(OPENAI_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    }),
+  })
+
+  // Add error logging
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`OpenAI API error: ${response.status} - ${errorText}`)
+  }
+
+  const data: OpenAIResponse = await response.json()
+  return data.choices[0]?.message?.content || "No response received"
+}
 
 export async function POST(request: NextRequest) {
   try {

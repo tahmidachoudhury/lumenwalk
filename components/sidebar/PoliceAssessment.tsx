@@ -7,11 +7,6 @@ import { useRoute } from "@/context/RouteContext"
 import { RouteSummary, Step } from "@/services/routeUtils"
 import { AssessmentProps } from "./AIAssessment"
 
-interface assessmentProps {
-  routeData: RouteSummary
-  assessmentResult: RefObject<any>
-}
-
 export default function PoliceAssessment({
   prevStepsLength,
   assessmentResult,
