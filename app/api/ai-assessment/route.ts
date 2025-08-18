@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import {
-  fetchCrimeDataDirect,
-  formatCrimeDataForPrompt,
-} from "../crime-data/route"
+
 import { Step } from "@/services/routeUtils"
 
 interface RouteData {
@@ -22,6 +19,42 @@ interface OpenAIResponse {
 }
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+
+function formatCrimeDataForPrompt(crimeData: any[]) {
+  if (!crimeData || crimeData.length === 0) {
+    return "No recent crime data available for this area."
+  }
+
+  const crimeCounts: Record<string, number> = crimeData.reduce((acc, crime) => {
+    const category = crime.category || "unknown"
+    acc[category] = (acc[category] || 0) + 1
+    return acc
+  }, {})
+
+  const totalCrimes = crimeData.length
+  const topCrimes = Object.entries(crimeCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3)
+    .map(([category, count]) => `${category}: ${count}`)
+    .join(", ")
+
+  return `${totalCrimes} crimes reported in ${crimeData[0].month}. Top types: ${topCrimes}`
+}
+
+//fetches crimedata for ai assessment
+async function fetchCrimeDataDirect(lat: number, lng: number) {
+  const now = new Date()
+  const targetDate = new Date(now.getFullYear(), now.getMonth() - 2, 1)
+  const dateParam = `${targetDate.getFullYear()}-${String(
+    targetDate.getMonth() + 1
+  ).padStart(2, "0")}`
+
+  const response = await fetch(
+    `https://data.police.uk/api/crimes-at-location?date=${dateParam}&lat=${lat}&lng=${lng}`
+  )
+
+  return response.ok ? await response.json() : null
+}
 
 //calls openai with the gpt-4 model with the prompt as a param
 async function callOpenAI(prompt: string): Promise<string> {

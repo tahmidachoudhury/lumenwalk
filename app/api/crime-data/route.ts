@@ -22,7 +22,7 @@ interface OpenAIResponse {
   }>
 }
 
-export function formatCrimeDataForPrompt(crimeData: any[]) {
+function formatCrimeDataForPrompt(crimeData: any[]) {
   if (!crimeData || crimeData.length === 0) {
     return "No recent crime data available for this area."
   }
@@ -44,7 +44,7 @@ export function formatCrimeDataForPrompt(crimeData: any[]) {
 }
 
 //fetches crimedata for ai assessment
-export async function fetchCrimeDataDirect(lat: number, lng: number) {
+async function fetchCrimeDataDirect(lat: number, lng: number) {
   const now = new Date()
   const targetDate = new Date(now.getFullYear(), now.getMonth() - 2, 1)
   const dateParam = `${targetDate.getFullYear()}-${String(
