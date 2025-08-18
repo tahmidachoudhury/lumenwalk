@@ -36,10 +36,10 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
 
   if (loading) {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-4 h-full">
+      <div className="bg-black/60 rounded-lg p-4 h-full">
         <div className="flex items-center gap-2 mb-3">
           <Shield className="w-5 h-5 text-blue-800" />
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-white">
             Police Data Analysis
           </h2>
         </div>
@@ -53,10 +53,10 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 h-full">
+    <div className="bg-black/60 rounded-lg p-4 h-full">
       <div className="flex items-center gap-2 mb-4">
-        <Shield className="w-5 h-5 text-blue-800" />
-        <h2 className="text-lg font-semibold text-gray-900">
+        <Shield className="w-5 h-5 text-white" />
+        <h2 className="text-lg font-semibold text-white">
           Police Data Analysis
         </h2>
       </div>
@@ -88,7 +88,7 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
       )}
 
       {!routeData && !loading && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-white">
           Select a route to get police data analysis
         </p>
       )}

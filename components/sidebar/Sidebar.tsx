@@ -38,10 +38,10 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
 
   return (
     <>
-      {/* Sidebar */}
+      {/* Sidebar - width hardcoded to 400px */}
       <div
-        className={`fixed top-0 left-0 h-full z-40 bg-white border-r border-gray-200 flex flex-col shadow-md transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 w-[30%]" : "-translate-x-full w-[30%]"
+        className={`bg-black/20 rounded-xl backdrop-blur-sm border border-white/30 shadow-xl fixed top-0 left-0 h-full z-40 border-r flex flex-col transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0 w-[400px]" : "-translate-x-full w-[400px]"
         }`}
       >
         {isOpen && (
@@ -50,7 +50,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
             {currentStep === 0 && (
               <div className="flex flex-col h-full overflow-y-auto">
                 {/* AI Assessment Section */}
-                <div className="border-b border-gray-200 p-4">
+                <div className=" p-4">
                   <AIAssessment
                     prevStepsLength={prevStepsLength}
                     assessmentResult={assessmentRef}
@@ -58,12 +58,12 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
                 </div>
 
                 {/* Police Assessment Section */}
-                <div className="border-b border-gray-200 p-4">
+                <div className=" p-4">
                   <PoliceAssessment routeData={routeData} />
                 </div>
 
                 {/* Call to Action */}
-                <div className="border-b border-gray-200 p-4">
+                <div className=" p-4">
                   <button
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
                     onClick={() => setCurrentStep(1)}
@@ -96,13 +96,13 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
         )}
       </div>
 
-      {/* Toggle Arrow */}
+      {/* Toggle Arrow - hardcoded to 400px */}
 
       <button
         onClick={toggleSidebar}
         className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md p-2 shadow-md hover:bg-gray-50 transition-colors duration-200"
         style={{
-          left: isOpen ? "30%" : "0%",
+          left: isOpen ? "400px" : "0%",
           transition: "left 0.3s ease-in-out",
         }}
       >

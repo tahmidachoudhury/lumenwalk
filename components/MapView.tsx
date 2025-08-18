@@ -9,7 +9,7 @@ import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 import Sidebar from "./sidebar/Sidebar"
 
-//I decided to hardcode this as the efforts needed to keep this secret is complicated and unmaintainable
+//I decided to hardcode this
 //additionally the risk level is very low and I have restricted the token to my domain and set usage limits
 export const mapboxToken =
   "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21jZnZvYWUyMGFxeDJrc2RpN2dleDI5bCJ9.b-3th-SG4GW-y91LO2XStw"
@@ -33,12 +33,13 @@ export default function MapView() {
     })
 
     mapRef.current = map
-    map.addControl(new mapboxgl.NavigationControl(), "top-right")
+    map.addControl(new mapboxgl.NavigationControl(), "bottom-right")
 
     const directions = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       unit: "metric",
       profile: "mapbox/walking",
+      walkway_bias: 1,
       alternatives: true,
       controls: {
         instructions: false,
@@ -46,7 +47,7 @@ export default function MapView() {
       },
     })
 
-    map.addControl(directions, "top-left")
+    map.addControl(directions, "top-right")
 
     directions.on("route", (e: any) => {
       setRouteEvent(e)
@@ -69,6 +70,7 @@ export default function MapView() {
     <div className="flex h-screen w-full">
       {/* Sidebar */}
       <Sidebar />
+      {/* This is the shareroute funcitonality which i decided to not include */}
       {/* <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
         <RouteWrapper steps={steps} distance={distance} duration={duration} />
         {origin && destination && (
