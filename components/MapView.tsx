@@ -12,7 +12,7 @@ import Sidebar from "./sidebar/Sidebar"
 //I decided to hardcode this
 //additionally the risk level is very low and I have restricted the token to my domain and set usage limits
 export const mapboxToken =
-  "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21jZnZvYWUyMGFxeDJrc2RpN2dleDI5bCJ9.b-3th-SG4GW-y91LO2XStw"
+  "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21laDJlb2V1MDNjYjJqcXR1bDVsOWk0ciJ9.g9SK74J7CjcAruee18L7YA"
 
 mapboxgl.accessToken = mapboxToken
 
