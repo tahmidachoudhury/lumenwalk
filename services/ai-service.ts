@@ -13,7 +13,6 @@ export async function getAIAssessment(routeData: any): Promise<AIAssessment> {
       },
       body: JSON.stringify({
         routeData,
-        assessmentType: "general",
       }),
     })
 
@@ -37,14 +36,13 @@ export async function getPoliceAssessment(
   routeData: any
 ): Promise<AIAssessment> {
   try {
-    const response = await fetch("/api/ai-assessment", {
+    const response = await fetch("/api/crime-data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         routeData,
-        assessmentType: "police",
       }),
     })
 

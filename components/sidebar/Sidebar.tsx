@@ -22,7 +22,8 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
 
   //this will store the assessment result so users can
   //come back to it
-  const assessmentRef = useRef<any>(null)
+  const aiAssessmentRef = useRef<any>(null)
+  const policeAsessmentRef = useRef<any>(null)
 
   useEffect(() => {
     // Only run if we have meaningful route data
@@ -53,13 +54,16 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
                 <div className=" p-4">
                   <AIAssessment
                     prevStepsLength={prevStepsLength}
-                    assessmentResult={assessmentRef}
+                    assessmentResult={aiAssessmentRef}
                   />
                 </div>
 
                 {/* Police Assessment Section */}
                 <div className=" p-4">
-                  <PoliceAssessment routeData={routeData} />
+                  <PoliceAssessment
+                    prevStepsLength={prevStepsLength}
+                    assessmentResult={policeAsessmentRef}
+                  />
                 </div>
 
                 {/* Call to Action */}

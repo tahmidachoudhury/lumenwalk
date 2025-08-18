@@ -11,7 +11,7 @@ import {
 import { getAIAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
 
-interface AssessmentProps {
+export interface AssessmentProps {
   prevStepsLength: RefObject<number>
   assessmentResult: RefObject<any>
 }
@@ -94,15 +94,6 @@ export default function AIAssessment({
             <p className="text-white text-sm leading-relaxed">
               {assessmentResult.current.summary}{" "}
             </p>
-          </div>
-
-          <div className="grid grid-cols-1  gap-3">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-600 " />
-              <span className="text-sm text-white ">
-                {assessmentResult.current.safety}
-              </span>
-            </div>
           </div>
 
           <div>

@@ -2,6 +2,7 @@ export type Step = {
   distance: number
   duration: number
   maneuver: { instruction: string; type: string }
+  name: string
 }
 
 export type RouteSummary = {

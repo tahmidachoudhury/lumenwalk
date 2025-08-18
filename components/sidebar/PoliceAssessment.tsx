@@ -3,21 +3,34 @@
 import { useState, useEffect } from "react"
 import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
 import { getPoliceAssessment } from "@/services/ai-service"
+import { useRoute } from "@/context/RouteContext"
+import { AssessmentProps } from "./AIAssessment"
 
-interface PoliceAssessmentProps {
-  routeData?: any
-}
-
-export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
-  const [assessment, setAssessment] = useState<any>(null)
+export default function PoliceAssessment({
+  prevStepsLength,
+  assessmentResult,
+}: AssessmentProps) {
+  const { steps, distance, duration, origin, destination } = useRoute()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Create route data object from context
+  const routeData = {
+    steps,
+    distance,
+    duration,
+    origin,
+    destination,
+  }
+
   useEffect(() => {
-    if (routeData) {
+    const stepsChanged = prevStepsLength.current == steps.length
+    if (stepsChanged) {
+      prevStepsLength.current = steps.length
+      assessmentResult.current = null
       fetchAssessment()
     }
-  }, [routeData])
+  }, [steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)
@@ -25,7 +38,7 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
 
     try {
       const result = await getPoliceAssessment(routeData)
-      setAssessment(result)
+      assessmentResult.current = result
     } catch (err) {
       setError("Failed to get police data assessment")
       console.error("Police Assessment error:", err)
@@ -61,36 +74,51 @@ export default function PoliceAssessment({ routeData }: PoliceAssessmentProps) {
         </h2>
       </div>
 
-      {loading && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span>Analyzing police data...</span>
+      {assessmentResult.current && !loading && (
+        <div className="space-y-4 overflow-y-auto">
+          <div>
+            <p className="text-white text-sm leading-relaxed">
+              {assessmentResult.current.summary}{" "}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1  gap-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-600 " />
+              <span className="text-sm text-white ">
+                {assessmentResult.current.safety}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium text-white mb-2">
+              Key Insights
+            </h3>
+            <ul className="space-y-1">
+              {assessmentResult.current.insights?.map(
+                (insight: string, i: number) => (
+                  <li
+                    key={i}
+                    className="text-xs text-white flex items-start gap-2"
+                  >
+                    <span className="w-1 h-1 bg-white rounded-full mt-2 flex-shrink-0"></span>
+                    {insight}
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
         </div>
       )}
-
+      {!assessmentResult.current && !loading && (
+        <p className="text-sm text-white">Select a route to get AI analysis</p>
+      )}
       {error && (
-        <div className="flex items-center gap-2 text-sm text-red-600">
+        <div className="flex items-center gap-2 text-red-600 text-sm">
           <AlertTriangle className="w-4 h-4" />
           <span>{error}</span>
         </div>
-      )}
-
-      {assessment && !loading && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-green-600">
-            <CheckCircle className="w-4 h-4" />
-            <span>Analysis complete</span>
-          </div>
-          <div className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-lg">
-            {assessment}
-          </div>
-        </div>
-      )}
-
-      {!routeData && !loading && (
-        <p className="text-sm text-white">
-          Select a route to get police data analysis
-        </p>
       )}
     </div>
   )
