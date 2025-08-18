@@ -2,6 +2,12 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import "mapbox-gl/dist/mapbox-gl.css"
+import { Gabarito } from "next/font/google"
+
+const gabarito = Gabarito({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+})
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,11 +38,7 @@ export default function RootLayout({
           data-website-id="59b5e23e-fd6e-4201-9ae5-59a0bc2bedeb"
         ></script>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body className={gabarito.className}>{children}</body>
     </html>
   )
 }
