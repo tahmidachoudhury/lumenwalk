@@ -40,7 +40,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
     <>
       {/* Sidebar - width hardcoded to 400px */}
       <div
-        className={`bg-black/20 rounded-xl backdrop-blur-sm border border-white/30 shadow-xl fixed top-0 left-0 h-full z-40 border-r flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`bg-black/20 rounded-xl backdrop-blur-sm  shadow-xl fixed top-0 left-0 h-full z-40 border-r flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0 w-[400px]" : "-translate-x-full w-[400px]"
         }`}
       >

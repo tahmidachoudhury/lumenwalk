@@ -8,11 +8,14 @@ import { useRef, useEffect, useState } from "react"
 import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 import Sidebar from "./sidebar/Sidebar"
+import useLightPreset from "@/services/suncalc"
 
 //I decided to hardcode this
 //additionally the risk level is very low and I have restricted the token to my domain and set usage limits
+// export const mapboxToken =
+//   "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21laDJlb2V1MDNjYjJqcXR1bDVsOWk0ciJ9.g9SK74J7CjcAruee18L7YA"
 export const mapboxToken =
-  "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21laDJlb2V1MDNjYjJqcXR1bDVsOWk0ciJ9.g9SK74J7CjcAruee18L7YA"
+  "pk.eyJ1IjoidGFobWlkMDEiLCJhIjoiY21laDJkMnJjMDM0bjJrcDZucm1ubDZ5cCJ9.p85LMck0PSQRKa_obWk68w"
 
 mapboxgl.accessToken = mapboxToken
 
@@ -21,19 +24,31 @@ export default function MapView() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const { steps, distance, duration, origin, destination, setRouteEvent } =
     useRoute()
+  const lightPreset = useLightPreset(-0.1276, 51.5072)
+
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     mapRef.current.setConfigProperty("basemap", "lightPreset", lightPreset)
+  //   }
+  // }, [lightPreset])
 
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/mapbox/standard", // must be Standard
       center: [-0.1276, 51.5072],
       zoom: 13,
     })
 
     mapRef.current = map
-    map.addControl(new mapboxgl.NavigationControl(), "bottom-right")
+
+    map.once("style.load", () => {
+      map.setConfigProperty("basemap", "lightPreset", lightPreset)
+    })
+
+    mapRef.current.addControl(new mapboxgl.NavigationControl(), "bottom-right")
 
     const directions = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
