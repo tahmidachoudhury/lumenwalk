@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     Crime data: ${formatCrimeDataForPrompt(crimeData)}
     
     STRICTLY JSON response:
-    {"summary": "police perspective safety overview", "insights": ["crime pattern", "is it safe at night", "tip3"], "safety": 1-4}
+    {"summary": "police perspective safety overview", "insights": ["top crimes", "is it safe at night", "tip3"], "safety": 1-4}
     
     Be specific on the summary. return useful insights and include facts from the crime data including the month they are from. STRICTLY return an integer only for the safety index. STRICTLY stick to this JSON structure.`
 

@@ -12,12 +12,12 @@ import { getAIAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
 
 export interface AssessmentProps {
-  prevStepsLength: RefObject<number>
+  trigger: number
   assessmentResult: RefObject<any>
 }
 
 export default function AIAssessment({
-  prevStepsLength,
+  trigger,
   assessmentResult,
 }: AssessmentProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
@@ -34,16 +34,11 @@ export default function AIAssessment({
   }
 
   useEffect(() => {
-    //when it is the first change, prevsteps is 0 (falsy) and steps.length
-    //will be truthy -> afterwards it will keep checking if the number of steps
-    //changed
-    const stepsChanged = prevStepsLength.current !== steps.length
-    if (stepsChanged) {
-      prevStepsLength.current = steps.length
-      assessmentResult.current = null
-      fetchAssessment()
-    }
-  }, [steps, distance, duration, origin, destination])
+    if (!trigger) return // skip on initial 0
+    assessmentResult.current = null
+
+    fetchAssessment()
+  }, [trigger, steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)

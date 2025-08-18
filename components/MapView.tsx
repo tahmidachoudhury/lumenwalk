@@ -24,6 +24,7 @@ export default function MapView() {
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const { steps, distance, duration, origin, destination, setRouteEvent } =
     useRoute()
+  const [currentRoute, setCurrentRoute] = useState<Step[]>(steps)
   const lightPreset = useLightPreset(-0.1276, 51.5072)
 
   // useEffect(() => {
@@ -81,10 +82,16 @@ export default function MapView() {
         )}&to=${destination.join(",")}`
       : ""
 
+  const [fetchTrigger, setFetchTrigger] = useState(0)
+
+  useEffect(() => {
+    setFetchTrigger((t) => t + 1)
+  }, [steps])
+
   return (
     <div className="flex h-screen w-full">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar fetchTrigger={fetchTrigger} />
       {/* This is the shareroute funcitonality which i decided to not include */}
       {/* <div className="w-[30%] bg-white overflow-y-auto border-r border-gray-200">
         <RouteWrapper steps={steps} distance={distance} duration={duration} />

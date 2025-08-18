@@ -8,17 +8,14 @@ import RouteInstructions from "./RouteInstructions"
 import { useRoute } from "@/context/RouteContext"
 
 interface SidebarProps {
-  routeData?: any
-  routeSteps?: any[]
+  fetchTrigger: number
 }
 
-export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
+export default function Sidebar({ fetchTrigger }: SidebarProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
   const [currentStep, setCurrentStep] = useState(0)
+  const prevStepsRef = useRef(steps)
   const [isOpen, setIsOpen] = useState(false)
-
-  //this will allow me to track if the steps have changed
-  const prevStepsLength = useRef<number>(0)
 
   //this will store the assessment result so users can
   //come back to it
@@ -53,7 +50,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
                 {/* AI Assessment Section */}
                 <div className=" p-4">
                   <AIAssessment
-                    prevStepsLength={prevStepsLength}
+                    trigger={fetchTrigger}
                     assessmentResult={aiAssessmentRef}
                   />
                 </div>
@@ -61,7 +58,7 @@ export default function Sidebar({ routeData, routeSteps = [] }: SidebarProps) {
                 {/* Police Assessment Section */}
                 <div className=" p-4">
                   <PoliceAssessment
-                    prevStepsLength={prevStepsLength}
+                    trigger={fetchTrigger}
                     assessmentResult={policeAsessmentRef}
                   />
                 </div>

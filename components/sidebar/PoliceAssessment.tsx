@@ -5,14 +5,16 @@ import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
 import { getPoliceAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
 import { AssessmentProps } from "./AIAssessment"
+import { Step } from "@/services/routeUtils"
 
 export default function PoliceAssessment({
-  prevStepsLength,
+  trigger,
   assessmentResult,
 }: AssessmentProps) {
   const { steps, distance, duration, origin, destination } = useRoute()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [currentSteps, setCurrentSteps] = useState<Step[]>()
 
   // Create route data object from context
   const routeData = {
@@ -24,13 +26,10 @@ export default function PoliceAssessment({
   }
 
   useEffect(() => {
-    const stepsChanged = prevStepsLength.current == steps.length
-    if (stepsChanged) {
-      prevStepsLength.current = steps.length
-      assessmentResult.current = null
-      fetchAssessment()
-    }
-  }, [steps, distance, duration, origin, destination])
+    if (!trigger) return
+    assessmentResult.current = null
+    fetchAssessment()
+  }, [trigger, steps, distance, duration, origin, destination])
 
   const fetchAssessment = async () => {
     setLoading(true)
