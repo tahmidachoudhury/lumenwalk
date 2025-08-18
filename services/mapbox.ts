@@ -51,6 +51,7 @@ export async function getRouteInstructions(
   route.legs.forEach((leg) => {
     leg.steps.forEach((step) => {
       steps.push({
+        name: "",
         maneuver: {
           instruction: step.maneuver.instruction,
           type: step.maneuver.type,
