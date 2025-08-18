@@ -60,7 +60,7 @@ async function callOpenAI(prompt: string): Promise<string> {
 }
 
 //embed route from frontend in an easy to parse format
-export function formatRouteForPrompt(routeData: RouteData): string {
+function formatRouteForPrompt(routeData: RouteData): string {
   const { steps, distance, duration, origin, destination } = routeData
 
   let formattedRoute = `Route Summary:

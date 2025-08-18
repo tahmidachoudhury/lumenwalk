@@ -1,8 +1,17 @@
+import { Step } from "@/services/routeUtils"
 import { NextRequest, NextResponse } from "next/server"
 
 interface CrimeDataParams {
   lat: number
   lng: number
+}
+
+interface RouteData {
+  steps: Step[]
+  distance: number
+  duration: number
+  origin: [number, number] | null
+  destination: [number, number] | null
 }
 
 interface OpenAIResponse {
@@ -50,7 +59,28 @@ export async function fetchCrimeDataDirect(lat: number, lng: number) {
 }
 
 // Import existing helper functions
-import { formatRouteForPrompt } from "../ai-assessment/route"
+function formatRouteForPrompt(routeData: RouteData): string {
+  const { steps, distance, duration, origin, destination } = routeData
+
+  let formattedRoute = `Route Summary:
+- Total Distance: ${(distance / 1000).toFixed(2)}km
+- Total Duration: ${Math.round(duration / 60)} minutes
+- Origin: ${origin ? `[${origin[0]}, ${origin[1]}]` : "Unknown"}
+- Destination: ${
+    destination ? `[${destination[0]}, ${destination[1]}]` : "Unknown"
+  }
+
+Step-by-step directions:
+`
+
+  steps.forEach((step, index) => {
+    formattedRoute += `${index + 1}. ${step.name} (${
+      step.distance
+    }m, ${Math.round(step.duration / 60)} min)\n`
+  })
+
+  return formattedRoute
+}
 
 //calls openai with the gpt-4 model with the prompt as a param
 async function callOpenAI(prompt: string): Promise<string> {
