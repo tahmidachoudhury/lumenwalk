@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { Step } from "@/services/routeUtils"
+import { routesGenerated } from "@/lib/metrics"
 
 interface RouteData {
   steps: Step[]
@@ -89,6 +90,8 @@ async function callOpenAI(prompt: string): Promise<string> {
   }
 
   const data: OpenAIResponse = await response.json()
+  //logs route created for prometheus
+  routesGenerated.inc()
   return data.choices[0]?.message?.content || "No response received"
 }
 

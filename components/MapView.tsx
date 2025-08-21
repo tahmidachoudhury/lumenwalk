@@ -9,6 +9,7 @@ import { useRoute } from "../context/RouteContext"
 import { Step } from "@/services/routeUtils"
 import Sidebar from "./sidebar/Sidebar"
 import useLightPreset from "@/services/suncalc"
+import { routesGenerated } from "@/lib/metrics"
 
 //I decided to hardcode this
 //additionally the risk level is very low and I have restricted the token to my domain and set usage limits
