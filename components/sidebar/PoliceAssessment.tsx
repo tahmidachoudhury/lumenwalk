@@ -1,11 +1,58 @@
 "use client"
 
 import { useState, useEffect, RefObject } from "react"
-import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  Loader2,
+  XCircle,
+  Info,
+} from "lucide-react"
 import { getPoliceAssessment } from "@/services/ai-service"
 import { useRoute } from "@/context/RouteContext"
-import { RouteSummary, Step } from "@/services/routeUtils"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { AssessmentProps } from "./AIAssessment"
+
+const SafetyIndicator = ({ safetyLevel }: any) => {
+  const getSafetyDisplay = (level: number) => {
+    if (level === 1) {
+      return {
+        icon: <XCircle className="w-4 h-4 text-red-600" />,
+        text: "Not safe",
+        textColor: "text-red-600",
+      }
+    } else if (level === 2 || level === 3) {
+      return {
+        icon: <AlertTriangle className="w-4 h-4 text-yellow-600" />,
+        text: "Caution, especially at night",
+        textColor: "text-yellow-600",
+      }
+    } else {
+      // 4 or 5
+      return {
+        icon: <CheckCircle className="w-4 h-4 text-green-600" />,
+        text: "Take precaution but road is safe",
+        textColor: "text-green-600",
+      }
+    }
+  }
+
+  const { icon, text, textColor } = getSafetyDisplay(safetyLevel)
+
+  return (
+    <div className="grid grid-cols-1 gap-3">
+      <div className="flex items-center gap-2">
+        {icon}
+        <span className={`text-sm ${textColor}`}>{text}</span>
+      </div>
+    </div>
+  )
+}
 
 export default function PoliceAssessment({
   prevStepsLength,
@@ -73,6 +120,18 @@ export default function PoliceAssessment({
         <h2 className="text-lg font-semibold text-white">
           Police Data Analysis
         </h2>
+        <div className="ml-auto">
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="text-white w-5 h-5" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Source: Metropolitan Police API (updates delayed by two months).
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {assessmentResult.current && !loading && (
@@ -85,10 +144,7 @@ export default function PoliceAssessment({
 
           <div className="grid grid-cols-1  gap-3">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-600 " />
-              <span className="text-sm text-white ">
-                {assessmentResult.current.safety}
-              </span>
+              <SafetyIndicator safetyLevel={assessmentResult.current.safety} />
             </div>
           </div>
 
