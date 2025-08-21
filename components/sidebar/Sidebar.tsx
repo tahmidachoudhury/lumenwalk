@@ -37,8 +37,10 @@ export default function Sidebar() {
     <>
       {/* Sidebar - width hardcoded to 400px */}
       <div
-        className={`bg-black/20 rounded-xl backdrop-blur-sm  shadow-xl fixed top-0 left-0 h-full z-40 flex flex-col transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 w-[400px]" : "-translate-x-full w-[400px]"
+        className={`bg-black/20 rounded-xl backdrop-blur-sm  shadow-xl fixed top-0 left-0 h-full z-40 flex flex-col transition-transform duration-300 ease-in-out overflow-y-scroll scrollbar-hide ${
+          isOpen
+            ? "translate-x-0 w-[380px] md:w-[400px]"
+            : "-translate-x-full w-[380px] md:w-[400px]"
         }`}
       >
         {isOpen && (
@@ -100,11 +102,9 @@ export default function Sidebar() {
 
       <button
         onClick={toggleSidebar}
-        className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md py-2 shadow-md hover:bg-gray-50 transition-colors duration-200"
-        style={{
-          left: isOpen ? "400px" : "0%",
-          transition: "left 0.3s ease-in-out",
-        }}
+        className={`absolute top-1/2 transform -translate-y-1/2 z-20 bg-white border border-gray-300 rounded-r-md py-4 shadow-md hover:bg-gray-50 transition-colors duration-200 absolute transition-[left] duration-300 ease-in-out ${
+          isOpen ? "left-[380px] md:left-[400px]" : "left-0"
+        }`}
       >
         {isOpen ? (
           <ChevronLeft className="w-4 h-4 text-gray-600" />
