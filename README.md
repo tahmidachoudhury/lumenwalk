@@ -7,7 +7,7 @@ Many cities are poorly lit or have crime hotspots that aren't obvious to pedestr
 
 ## LumenWalk Architecture
 
-![LumenWalk Architecture](/lumenwalk/lumenwalk.gif)
+![LumenWalk Architecture](/architecture/lumenwalk.gif)
 
 This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. GitHub Actions handles CI/CD, and external services like Umami and Sentry provide analytics and error tracking. HTTPS is secured using Certbot, and uptime is monitored via UptimeRobot.
 
@@ -39,7 +39,7 @@ This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. 
 - **Error Tracking:** Sentry logs backend exceptions.
 
 **Uptime Screenshot**
-![Monitoring Screenshot](/lumenwalk/uptimerobot2.png)
+![Monitoring Screenshot](/architecture/uptimerobot2.png)
 
 <br>
 <br>
