@@ -1,4 +1,12 @@
 services:
+  # lumenwalk:
+  #   build: .
+  #   container_name: lumenwalk
+  #   ports:
+  #     - "3000:3000"     # run in development
+  #   environment:
+  #     - NODE_ENV=development
+
   prometheus:
     image: prom/prometheus
     volumes:
@@ -12,6 +20,8 @@ services:
       - "3001:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
+
+  
 
 volumes:
   grafana-storage:
