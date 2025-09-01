@@ -73,7 +73,7 @@ This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. 
 <br>
 <br>
 
-## 📝 Deployment Workflow
+## Deployment Workflow
 
 1. Push to `main` triggers **GitHub Actions**.
 
@@ -130,20 +130,4 @@ Removing them freed almost 3GB of space, restoring the instance to a healthy sta
 
 
 
-<br>
-<br>
-<br>
-
-## 🧠 Key DevOps Learnings
-
-1. **Infrastructure Visualization** – Learned to map components visually with draw.io and show external tools (monitoring, analytics) *outside* the EC2 boundary.
-
-2. **Disk Space Management** – EC2 crashed due to unused Docker images. Fixed with:
-   ```bash
-   docker image prune -a -f
-   ```
-   and integrated a cleanup step into my CI workflow.
-3. **Reverse Proxy Setup** – Configured NGINX to route traffic to Dockerised frontend and secure HTTPS with Certbot.
-
-4. **CI/CD Automation** – GitHub Actions auto-deploys new builds to EC2 via SSH.
 
