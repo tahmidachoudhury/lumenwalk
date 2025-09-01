@@ -46,37 +46,28 @@ This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. 
 
 ### Grafana + Prometheus Dashboard
 ![Observability Screenshot](/architecture/grafanapanel.png)
+>Real-time system and app metrics (CPU/RAM, container usage, scrape health) plus business-focused counters like `routes_generated_total`. Proves observability is wired end-to-end.
 
 <br>
 <br>
 
 ### Umami Analytics for Frontend Traffic
 ![Analytics Screenshot](/architecture/umamianalytics.png)
+>traffic insights — pageviews, unique visitors, top pages, referrers/UTMs — no cookies or personal data.
 
 <br>
 <br>
 
 ### Sentry Dashboard for Error logging
 ![Error logging Screenshot](/architecture/sentrydashboard.png)
+>Backend exceptions with stack traces, release/env tags, breadcrumbs, and alerting. Shows error rate trends and how fast issues are resolved.
 
 <br>
 <br>
 
 ### Uptime Screenshot
 ![Monitoring Screenshot](/architecture/uptimerobot2.png)
-
-<br>
-<br>
-<br>
-
-## Key Features  
-- AI-powered route recommendations based on safety and lighting data  
-- Interactive Mapbox interface with live route rendering  
-- Integration with OpenAI to summarise route risks in plain language  
-- Real-time data from Metro Police and lighting APIs  
-- Shareable routes — users can send a link to others who can view the route and submit safety feedback  
-- Feedback is stored in a database for future analysis  
-- Fully Dockerised and deployed to AWS with HTTPS and monitoring  
+> External heartbeat on `/api/status` (5-min interval) to verify real-user availability and catch regional/network issues that internal metrics can miss.
 
 <br>
 <br>
