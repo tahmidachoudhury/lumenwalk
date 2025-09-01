@@ -27,12 +27,13 @@ This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. 
 | Analytics         | Umami                       |
 | Error Tracking    | Sentry                      |
 | Domain / DNS      | Route 53 + Custom Domain    |
+| Observability     | Grafana + Prometheus        |
 
 <br>
 <br>
 <br>
 
-## Observability and Uptime Infrastructure Tools
+### Observability and Uptime Infrastructure Tools
 
 - **Uptime Monitoring:** UptimeRobot checks `/api/status` every 5 minutes.
 - **Analytics:** Umami tracks frontend usage.
@@ -40,16 +41,28 @@ This diagram shows how LumenWalk is deployed on AWS EC2 using Docker and NGINX. 
 - **Metrics (Prometheus):** App exposes Prometheus metrics at `/api/metrics`.
 - **Dashboards (Grafana):** Grafana visualises Prometheus data (process RAM/CPU, event-loop lag, custom counters like `routes_generated_total`).
 
-## Grafana + Prometheus Dashboard
+<br>
+<br>
+
+### Grafana + Prometheus Dashboard
 ![Observability Screenshot](/architecture/grafanapanel.png)
 
-## Umami Analytics for Frontend Traffic
+<br>
+<br>
+
+### Umami Analytics for Frontend Traffic
 ![Analytics Screenshot](/architecture/umamianalytics.png)
 
-## Sentry Dashboard for Error logging
+<br>
+<br>
+
+### Sentry Dashboard for Error logging
 ![Error logging Screenshot](/architecture/sentrydashboard.png)
 
-## Uptime Screenshot
+<br>
+<br>
+
+### Uptime Screenshot
 ![Monitoring Screenshot](/architecture/uptimerobot2.png)
 
 <br>
